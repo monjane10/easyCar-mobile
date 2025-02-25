@@ -4,5 +4,10 @@ export const styles = ({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+
+    logo: {
+        width: 200,
+        height: 46,
     }
 });

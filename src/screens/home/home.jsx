@@ -7,7 +7,7 @@ function Home() {
     return (
         <ImageBackground source={icons.bg} resizeMode="cover" style={styles.bg}>
 
-            <Image source={icons.logo} />
+            <Image source={icons.logo} style={styles.logo} />
 
         </ImageBackground>
     );
