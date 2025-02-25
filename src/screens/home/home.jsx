@@ -1,15 +1,18 @@
-import { Text } from "react-native"
+import { ImageBackground,Image, Text } from "react-native"
+import icons from "../../constants/icons.js";
 function Home() {
 
 
     return (
-    <>
-    
-    <Text style={{fontSize: 30}}>Logotipo</Text>
-    <Text style={{fontSize: 30}}>Passageiros</Text>
-    <Text style={{fontSize: 30}}>Motoristas</Text>
+        <ImageBackground source={icons.bg} resizeMode="cover" style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            }}>
 
-    </>
+            <Image source={icons.logo} />
+
+        </ImageBackground>
     );
 }
 
