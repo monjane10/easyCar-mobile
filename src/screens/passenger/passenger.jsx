@@ -10,33 +10,34 @@ import { getCurrentPositionAsync, requestForegroundPermissionsAsync, reverseGeoc
 
 function Passenger(props) {
 
+    const userId = 1; // UTILIZADOR LOGADO NA APLICAÇÃO
     const [myLocation, setMyLocation] = useState({});
     const [title, setTitle] = useState("");
+    const [status, setStatus] = useState("");
     const [pickupAddress, setPickupAddress] = useState("");
     const [dropoffAddress, setDropoffAddress] = useState("");
 
 
     async function RequestRideFromUser() {
         //Aceder aos dados do utilizador na API
-        const response = {};
-        return response;
-
-        /*{
+        //const response = {};
+         const response = {
             ride_id: 2,
             passenger_user_id: 3,
             passenger_name: "Hayati Monjane",
             passenger_phone: "(+258) 850741012",
-            pickup_address: "UEM-Campos, 123 - Centro",
+            pickup_address: "UEM-Campos, 123 - Julius Nyerere",
             pickup_date: "2025-02-26",
-            pickup_latitude: -25.929247,
-            pickup_longitude: 32.585896,
-            dropoff_address: "Shoprite",
+            pickup_latitude: -25.980467,
+            pickup_longitude: 32.591942,
+            dropoff_address: "Shoprite Da Matola",
             status: "P",
             driver_user_id: 4,
             driver_name: null,
             latitude: null,
             longitude: null
-        } */
+        }
+        return response;
     }
     //Funcao para obter a localização do utilizador
     async function RequestPermissionAndGetLocation() {
@@ -73,13 +74,36 @@ function Passenger(props) {
             } else {
                 Alert.alert("Não foi possível obter a tua localização");
             }
-
-
-
         } else {
-            //não tem corrida aberta
-
+            setTitle(response.status =="P" ? "Aguardando pela corrida..." : "A tua corrida está a caminho...");
+            setMyLocation({ latitude: response.pickup_latitude, longitude: response.pickup_longitude });
+            setPickupAddress(response.pickup_address);
+            setDropoffAddress(response.dropoff_address);
+            setStatus(response.status);
         }
+    }
+
+    //Função para solicitar uma corrida
+    async function AskForRide() {
+        const json = {
+            passenger_id: userId,
+            pickup_address: pickupAddress,
+            dropoff_address: dropoffAddress,
+            pickup_latitude: myLocation.latitude,
+            pickup_longitude: myLocation.longitude,
+        }
+
+        console.log("Dados a serem enviados para a API: ", json);
+
+        props.navigation.goBack(); //Voltar para a tela anterior
+    }
+    //Função para cancelar uma corrida
+    async function CancelRide() {
+
+    }
+  //Função para finalizar uma corrida
+    async function FinishRide() {
+        
     }
 
 
@@ -119,16 +143,31 @@ function Passenger(props) {
 
                     <View style={styles.footerFields}>
                         <Text>Origem</Text>
-                        <TextInput style={styles.input} value={pickupAddress} />
+                        <TextInput style={styles.input} value={pickupAddress} 
+                        onChangeText={(text) => setPickupAddress(text)} 
+                        editable={status == "" ? true : false} />
                     </View>
 
                     <View style={styles.footerFields}>
                         <Text >Destino</Text>
-                        <TextInput style={styles.input} value={dropoffAddress} />
+                        <TextInput style={styles.input} value={dropoffAddress}
+                        onChangeText={(text) => setDropoffAddress(text)}
+                        editable={status == "" ? true : false} />
                     </View>
                 </View>
-
-                <MyButton text="CONFIRMAR" theme="default" />
+                {
+                    status == "" &&   <MyButton text="CONFIRMAR" theme="default"
+                    onClick={AskForRide} />
+                }
+                 {
+                    status == "P" &&   <MyButton text="CANCELAR" theme="red"
+                    onClick={CancelRide} />
+                }
+                 {
+                    status == "A" &&   <MyButton text="FINALIZAR CORRIDA" theme="red"
+                    onClick={FinishRide} />
+                }
+              
             </>
                 :
                 <View style={styles.loading}>
