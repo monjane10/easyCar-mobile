@@ -49,7 +49,7 @@ function Passenger(props) {
        dropoff_address: "Shoprite Da Matola",
        status: "A",
        driver_user_id: 4,
-       driver_name: "Lourenço Monajne",
+       driver_name: "Lourenço Monajane",
        driver_phone: "(+258) 850741012",
    }
         return response;
