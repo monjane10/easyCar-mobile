@@ -14,6 +14,8 @@ function Passenger(props) {
     const [myLocation, setMyLocation] = useState({});
     const [title, setTitle] = useState("");
     const [status, setStatus] = useState("");
+    const [rideId, setRideId] = useState(0);
+    const [driverName, setDriverNAme] = useState("");
     const [pickupAddress, setPickupAddress] = useState("");
     const [dropoffAddress, setDropoffAddress] = useState("");
 
@@ -21,7 +23,7 @@ function Passenger(props) {
     async function RequestRideFromUser() {
         //Aceder aos dados do utilizador na API
         //const response = {};
-         const response = {
+        /* const response = {
             ride_id: 2,
             passenger_user_id: 3,
             passenger_name: "Hayati Monjane",
@@ -34,9 +36,22 @@ function Passenger(props) {
             status: "P",
             driver_user_id: 4,
             driver_name: null,
-            latitude: null,
-            longitude: null
-        }
+        }*/
+       const response ={
+       ride_id: 1,
+       passenger_user_id: 3,
+       passenger_name: "Hayati Monjane",
+       passenger_phone: "(+258) 850741012",
+       pickup_address: "UEM-Campos, 123 - Julius Nyerere",
+       pickup_date: "2025-02-26",
+       pickup_latitude: -25.980467,
+       pickup_longitude: 32.591942,
+       dropoff_address: "Shoprite Da Matola",
+       status: "A",
+       driver_user_id: 4,
+       driver_name: "Lourenço Monajne",
+       driver_phone: "(+258) 850741012",
+   }
         return response;
     }
     //Funcao para obter a localização do utilizador
@@ -80,6 +95,8 @@ function Passenger(props) {
             setPickupAddress(response.pickup_address);
             setDropoffAddress(response.dropoff_address);
             setStatus(response.status);
+            setRideId(response.ride_id);
+            setDriverNAme(response.driver_name + " - " + response.driver_phone);
         }
     }
 
@@ -99,11 +116,25 @@ function Passenger(props) {
     }
     //Função para cancelar uma corrida
     async function CancelRide() {
+        const json = {
+            passenger_user_id: userId,
+            ride_id: rideId,
+        }
 
+        console.log("Dados a serem enviados para a API: ", json);
+
+        props.navigation.goBack(); //Voltar para a tela anterior
     }
   //Função para finalizar uma corrida
     async function FinishRide() {
-        
+        const json = {
+            passenger_user_id: userId,
+            ride_id: rideId,
+        }
+
+        console.log("Dados a serem enviados para a API: ", json);
+
+        props.navigation.goBack(); //Voltar para a tela anterior
     }
 
 
@@ -154,6 +185,16 @@ function Passenger(props) {
                         onChangeText={(text) => setDropoffAddress(text)}
                         editable={status == "" ? true : false} />
                     </View>
+
+                    {
+                        status == "A" &&  <View style={styles.footerFields}>
+                        <Text >Motorista</Text>
+                        <TextInput style={styles.input} value={driverName}
+                        editable={false} />
+                    </View>
+                    }
+
+                   
                 </View>
                 {
                     status == "" &&   <MyButton text="CONFIRMAR" theme="default"
