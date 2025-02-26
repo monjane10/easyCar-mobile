@@ -14,10 +14,6 @@ function RideDetails(props) {
     const [title, setTitle] = useState('');
     const [ride, setRide] = useState({});
     console.log(rideId, userId);
-    const [myLocation, setMyLocation] = useState({
-        latitude: -25.980528, 
-        longitude: 32.591983
-    });
 
     async function RequestRideDetails() {
         //Aceder a dados da viagem na API
@@ -28,8 +24,8 @@ function RideDetails(props) {
             passenger_phone: "(+258) 850741012",
             pickup_address: "UEM-Campos, 123 - Julius Nyerere",
             pickup_date: "2025-02-26",
-            pickup_latitude: -25.980467,
-            pickup_longitude: 32.591942,
+            pickup_latitude: -25.980528, 
+            pickup_longitude: 32.591983,
             dropoff_address: "Shoprite Da Matola",
             status: "P",
             driver_user_id: 4,
@@ -40,6 +36,26 @@ function RideDetails(props) {
             setTitle(response.passenger_name + " - " + response.passenger_phone);
             setRide(response);
         }
+    }
+
+    async function AcceptRide() {
+        //Aceder a dados da viagem na API
+        const json = {
+            driver_user_id: userId,
+            ride_id: rideId,
+        }
+        console.log("Aceitar Corrida:", json);
+        props.navigation.goBack();
+    }
+
+    async function CancelRide() {
+        //Aceder a dados da viagem na API
+        const json = {
+            driver_user_id: userId,
+            ride_id: rideId,
+        }
+        console.log("Cancelar Corrida:", json);
+        props.navigation.goBack();
     }
 
     useEffect(() => {
@@ -87,7 +103,14 @@ function RideDetails(props) {
                 </View>
             </View>
 
-            <MyButton text="ACEITAR"/>
+            {
+                    ride.status == "P" &&   <MyButton text="ACEITAR" theme="default"
+                    onClick={AcceptRide} />
+                }
+                 {
+                   ride.status == "A" &&   <MyButton text="CANCELAR" theme="red"
+                    onClick={CancelRide} />
+                }
 
         </View>
     );
