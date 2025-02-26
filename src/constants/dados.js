@@ -34,13 +34,42 @@ export const json_rides = [{
     passenger_phone: "(+258) 850741012",
     pickup_address: "UEM-Campos, 123 - Centro",
     pickup_date: "2025-02-26",
-    dropoff_address: "MASP",
+    dropoff_address: "Shoprite",
     status: "A",
     driver_user_id: 4,
     driver_name: "LouryBoy",
     latitude: "-25.949159", 
     longitude: "-432.598207"
 },
+{
+    ride_id: 5,
+    passenger_user_id: 3,
+    passenger_name: "Tânia Vicente",
+    passenger_phone: "(+258) 850741012",
+    pickup_address: "UEM-Campos, 123 - Maputo",
+    pickup_date: "2025-02-26",
+    dropoff_address: "UJC-Campos, Zimpento",
+    status: "A",
+    driver_user_id: 4,
+    driver_name: "LouryBoy",
+    latitude: "-25.949159", 
+    longitude: "-432.598207"
+},
+{
+    ride_id: 6,
+    passenger_user_id: 1,
+    passenger_name: "Milton Monjane",
+    passenger_phone: "(+258) 850741312",
+    pickup_address: "Maputo-Moçambique",
+    pickup_date: "2025-02-26",
+    dropoff_address: "Shoprite",
+    status: "P",
+    driver_user_id: 2,
+    driver_name: "João Martins",
+    latitude: "-25.931701",
+    longitude: "32.616883"
+},
+
 {
     ride_id: 3,
     passenger_user_id: 3,

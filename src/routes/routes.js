@@ -18,9 +18,9 @@ function Routes() {
             }} />
 
             <Stack.Screen name="Ride" component={Ride} options={{
-                headerShadowVisible: false,
-                headerTitle: "",
-                headerTransparent: true,
+                headerTitle: "Viagens Disponíveis",
+                headerTitleAlign: "center"
+              
             }} />
         </Stack.Navigator>
 
