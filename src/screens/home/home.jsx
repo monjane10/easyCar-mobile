@@ -2,10 +2,10 @@ import { ImageBackground, Image, Text, TouchableOpacity, Alert } from "react-nat
 import icons from "../../constants/icons.js";
 import { styles } from "./home.style.js";
 
-function Home() {
+function Home(props) {
 
     function OpenPassenger(){
-        Alert.alert("Abrir tela de passageiros");
+      props.navigation.navigate("Passenger");
 
     }
 
