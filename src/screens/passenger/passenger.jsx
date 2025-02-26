@@ -51,14 +51,9 @@ function Passenger(props) {
                     <Text >Destino</Text>
                     <TextInput style={styles.input} />
                 </View>
-
-                <View style={styles.footerFields}>
-                    <Text >Motorista</Text>
-                    <TextInput style={styles.input} />
-                </View>
             </View>
 
-            <MyButton text="CONFIRMAR" theme="" />
+            <MyButton text="CONFIRMAR" theme="default" />
 
         </View>
     );
