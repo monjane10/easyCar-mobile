@@ -11,7 +11,7 @@ function Home(props) {
 
     
     function OpenRide(){
-        Alert.alert("Abrir tela de motoristas");
+        props.navigation.navigate("Ride");
     }
 
 
