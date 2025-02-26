@@ -2,22 +2,25 @@ import { ActivityIndicator, Text, TextInput, View } from "react-native";
 import MyButton from "../../components/mybutton/mybutton.jsx";
 import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
 import { styles } from './passenger.style.js'
-import { useState,  useEffect } from "react";
+import { useState, useEffect } from "react";
 import icons from '../../constants/icons.js'
-import {getCurrentPositionAsync, requestForegroundPermissionsAsync } from "expo-location";
+import { getCurrentPositionAsync, requestForegroundPermissionsAsync, reverseGeocodeAsync } from "expo-location";
 
 
 
 function Passenger(props) {
 
     const [myLocation, setMyLocation] = useState({});
-
     const [title, setTitle] = useState("");
+    const [pickupAddress, setPickupAddress] = useState("");
+    const [dropoffAddress, setDropoffAddress] = useState("");
+
+
     async function RequestRideFromUser() {
         //Aceder aos dados do utilizador na API
         const response = {};
         return response;
-        
+
         /*{
             ride_id: 2,
             passenger_user_id: 3,
@@ -35,43 +38,50 @@ function Passenger(props) {
             longitude: null
         } */
     }
-
+    //Funcao para obter a localização do utilizador
     async function RequestPermissionAndGetLocation() {
-        const {granted} = await requestForegroundPermissionsAsync();
-        if(granted){
-            //obter a localização do utilizador
+        const { granted } = await requestForegroundPermissionsAsync();
+        if (granted) {
             const location = await getCurrentPositionAsync();
-            if(location.coords.latitude){
+            if (location.coords.latitude) {
                 return location.coords;
             } else {
                 return {};
             }
         } else {
-            Alert.alert("Não foi possível obter a tua localização");
+            return {};
         }
     }
 
-    async function LoadScreen(){
+    async function RequestAdressName(latitude, longitude) {
+        const response = await reverseGeocodeAsync({ latitude, longitude });
+        if (response[0].street && response[0].streetNumber && response[0].district && response[0].city) {
+            setPickupAddress(response[0].street + " " + response[0].streetNumber + ", " + response[0].district + ", " + response[0].city);
+        }
+    }
+
+    async function LoadScreen() {
         //buscar dados de alguma corrida aberta na API para o utilizador...
         const response = await RequestRideFromUser();
-        
-        if(!response.ride_id){
-            //const location = {latitude:-25.929247, longitude: 32.585896};
-            const location = await RequestPermissionAndGetLocation();
-
+        if (!response.ride_id) {
+            const location = { latitude: -25.971289,longitude:  32.566223 };
+           // const location = await RequestPermissionAndGetLocation();
             if (location.latitude) {
                 setTitle("Solicitar uma corrida...");
                 setMyLocation(location);
+                RequestAdressName(location.latitude, location.longitude);
+            } else {
+                Alert.alert("Não foi possível obter a tua localização");
             }
 
-          
-            
+
+
         } else {
             //não tem corrida aberta
 
         }
     }
-        
+
 
     useEffect(() => {
         LoadScreen();
@@ -84,48 +94,48 @@ function Passenger(props) {
         <View style={styles.container}>
             {myLocation.latitude ? <>
                 <MapView style={styles.map}
-                provider={PROVIDER_DEFAULT}
-                initialRegion={{
-                    latitude: myLocation.latitude,
-                    longitude: myLocation.longitude,
-                    latitudeDelta: 0.04,
-                    longitudeDelta: 0.04
-                }}>
-                <Marker coordinate={{
-                    latitude: myLocation.latitude,
-                    longitude: myLocation.longitude,
-                }}
-                    title="Hayati Monjane"
-                    description="FPLM, 4001"
-                    image={icons.location} style={styles.marker} />
+                    provider={PROVIDER_DEFAULT}
+                    initialRegion={{
+                        latitude: myLocation.latitude,
+                        longitude: myLocation.longitude,
+                        latitudeDelta: 0.04,
+                        longitudeDelta: 0.04
+                    }}>
+                    <Marker coordinate={{
+                        latitude: myLocation.latitude,
+                        longitude: myLocation.longitude,
+                    }}
+                        title="Hayati Monjane"
+                        description="FPLM, 4001"
+                        image={icons.location} style={styles.marker} />
 
-            </MapView>
+                </MapView>
 
-            <View style={styles.footer}>
+                <View style={styles.footer}>
 
-            <View style={styles.footerText}>
-                    <Text style={styles.title}>{title}</Text>
+                    <View style={styles.footerText}>
+                        <Text style={styles.title}>{title}</Text>
+                    </View>
+
+                    <View style={styles.footerFields}>
+                        <Text>Origem</Text>
+                        <TextInput style={styles.input} value={pickupAddress} />
+                    </View>
+
+                    <View style={styles.footerFields}>
+                        <Text >Destino</Text>
+                        <TextInput style={styles.input} value={dropoffAddress} />
+                    </View>
                 </View>
 
-                <View style={styles.footerFields}>
-                    <Text>Origem</Text>
-                    <TextInput style={styles.input} />
-                </View>
-
-                <View style={styles.footerFields}>
-                    <Text >Destino</Text>
-                    <TextInput style={styles.input} />
-                </View>
-            </View>
-
-            <MyButton text="CONFIRMAR" theme="default" />
+                <MyButton text="CONFIRMAR" theme="default" />
             </>
-             : 
-             <View style={styles.loading}>
-                <ActivityIndicator size={"large"}/>
-             </View>
-             }
-            
+                :
+                <View style={styles.loading}>
+                    <ActivityIndicator size={"large"} />
+                </View>
+            }
+
 
         </View>
     );
