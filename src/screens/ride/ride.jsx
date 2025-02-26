@@ -2,18 +2,33 @@ import { Text, View, FlatList, TouchableOpacity, Image } from "react-native";
 import { styles } from "./ride.style";
 import{json_rides} from "../../constants/dados.js";
 import icons from "../../constants/icons.js";
+import { useEffect, useState } from "react";
 
 
 function Ride(props) {
 
+    const userId = 2; // UTILIZADOR LOGADO NA APLICAÇÃO
+    const [rides, setRides] = useState([]);
+
     function OpenRideDetails(id){
-        console.log("id:" + "" + id);
-        props.navigation.navigate("RideDetails");
+        props.navigation.navigate("RideDetails", {
+            rideId: id,
+            userId: userId
+        });
     }
+
+    async function RequestRides(){
+        //Aceder a API para obter os dados das corridas
+        setRides(json_rides);
+    }
+
+    useEffect(() => {
+        RequestRides();
+    }, []);
 
     return (
         <View style={styles.container}>
-            <FlatList data={json_rides}
+            <FlatList data={rides}
                       keyExtractor={(ride) => ride.ride_id}
                       showsVerticalScrollIndicator={false}
                       renderItem={({item})=> {

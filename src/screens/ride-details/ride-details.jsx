@@ -2,17 +2,49 @@ import { Text, TextInput, View } from "react-native";
 import MyButton from "../../components/mybutton/mybutton.jsx";
 import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
 import { styles } from './ride-details.style.js';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import icons from '../../constants/icons.js';
 
 
 
 function RideDetails(props) {
 
+    const rideId = props.route.params.rideId;
+    const userId = props.route.params.userId;
+    const [title, setTitle] = useState('');
+    const [ride, setRide] = useState({});
+    console.log(rideId, userId);
     const [myLocation, setMyLocation] = useState({
-        latitude: -25.929247,
-        longitude: 32.585896
+        latitude: -25.980528, 
+        longitude: 32.591983
     });
+
+    async function RequestRideDetails() {
+        //Aceder a dados da viagem na API
+        const response = {
+            ride_id: 2,
+            passenger_user_id: 3,
+            passenger_name: "Hayati Monjane",
+            passenger_phone: "(+258) 850741012",
+            pickup_address: "UEM-Campos, 123 - Julius Nyerere",
+            pickup_date: "2025-02-26",
+            pickup_latitude: -25.980467,
+            pickup_longitude: 32.591942,
+            dropoff_address: "Shoprite Da Matola",
+            status: "P",
+            driver_user_id: 4,
+            driver_name: null,
+        }
+
+        if (response.passenger_name) {
+            setTitle(response.passenger_name + " - " + response.passenger_phone);
+            setRide(response);
+        }
+    }
+
+    useEffect(() => {
+        RequestRideDetails();
+    }, [])
 
 
 
@@ -21,17 +53,17 @@ function RideDetails(props) {
             <MapView style={styles.map}
                 provider={PROVIDER_DEFAULT}
                 initialRegion={{
-                    latitude: -25.929247,
-                    longitude: 32.585896,
+                    latitude: ride.pickup_latitude,
+                    longitude: ride.pickup_longitude,
                     latitudeDelta: 0.04,
                     longitudeDelta: 0.04
                 }}>
                 <Marker coordinate={{
-                    latitude: -25.929247,
-                    longitude: 32.585896,
+                     latitude: ride.pickup_latitude,
+                     longitude: ride.pickup_longitude
                 }}
-                    title="Hayati Monjane"
-                    description="FPLM, 4001"
+                    title={ride.passenger_name}
+                    description={ride.pickup_address}
                     image={icons.location} style={styles.marker} />
 
             </MapView>
@@ -39,17 +71,19 @@ function RideDetails(props) {
             <View style={styles.footer}>
 
             <View style={styles.footerText}>
-                    <Text style={styles.title}>Encontre o teu táxi</Text>
+                    <Text style={styles.title}>{title}</Text>
                 </View>
 
                 <View style={styles.footerFields}>
                     <Text>Origem</Text>
-                    <TextInput style={styles.input} />
+                    <TextInput style={styles.input} value={ride.pickup_address}
+                    editable={false} />
                 </View>
 
                 <View style={styles.footerFields}>
                     <Text >Destino</Text>
-                    <TextInput style={styles.input} />
+                    <TextInput style={styles.input} value={ride.dropoff_address}
+                    editable={false} />
                 </View>
             </View>
 
