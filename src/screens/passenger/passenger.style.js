@@ -13,6 +13,31 @@ export const styles = ({
     marker: {
         width: 60,
         height: 60
+    },
+
+    footer: {
+        backgroundColor: '#fff',
+    },
+
+    footerFields:{
+        margin: 15
+    },
+
+    footerText: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        maginTop: 25,
+        padding: 20,
+    },
+    title: {
+        fontSize: 22,
+        fontWeight: 'bold'
+    },
+    input: {
+        backgroundColor: '#fff',
+        borderWidth: 1,
+        borderColor: '#cccccc',
+        padding: 10
     }
 
    
