@@ -31,5 +31,14 @@ export const styles = ({
     btn: {
         alignItems: 'center',
         margin: 30
-    }
+    },
+    footer: {
+      marginTop: 50,
+      alignItems: 'center',  
+    },
+    footerText: {
+        fontSize: 18,
+        color: 'white',
+        marginTop: 50
+    },
 });

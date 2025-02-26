@@ -1,4 +1,4 @@
-import { ImageBackground, Image, Text, TouchableOpacity, Alert } from "react-native"
+import { ImageBackground, Image, Text, TouchableOpacity, Alert, View } from "react-native"
 import icons from "../../constants/icons.js";
 import { styles } from "./home.style.js";
 
@@ -34,6 +34,10 @@ function Home(props) {
                 <Text style={styles.title}>Motorista</Text>
                 <Text style={styles.text}>Forneça Serviços de Táxi</Text>
             </TouchableOpacity>
+
+            <View style={styles.footer}>
+                <Text style={styles.footerText}>Desenvolvido por <Text style={{fontWeight: 'bold', color: "white"}}>Lourenço Monjane</Text></Text>
+            </View>
 
         </ImageBackground>
     );
