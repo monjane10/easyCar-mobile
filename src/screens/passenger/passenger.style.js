@@ -38,6 +38,12 @@ export const styles = ({
         borderWidth: 1,
         borderColor: '#cccccc',
         padding: 10
+    },
+
+    loading: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 
    
