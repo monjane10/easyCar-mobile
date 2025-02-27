@@ -24,7 +24,7 @@ function Home(props) {
                 <Image source={icons.passenger}
                     style={styles.img} />
                 <Text style={styles.title}>Passageiro</Text>
-                <Text style={styles.text}>Encontre um táxi para ti</Text>
+                <Text style={styles.text}>O teu táxi está à espera, vamos embora!</Text>
             </TouchableOpacity>
 
            
@@ -32,7 +32,7 @@ function Home(props) {
                 <Image source={icons.driver}
                     style={styles.img} />
                 <Text style={styles.title}>Motorista</Text>
-                <Text style={styles.text}>Forneça Serviços de Táxi</Text>
+                <Text style={styles.text}>FConduza, fature e ajude a movimentar a cidade!</Text>
             </TouchableOpacity>
 
             <View style={styles.footer}>
