@@ -32,7 +32,7 @@ function Home(props) {
                 <Image source={icons.driver}
                     style={styles.img} />
                 <Text style={styles.title}>Motorista</Text>
-                <Text style={styles.text}>FConduza, fature e ajude a movimentar a cidade!</Text>
+                <Text style={styles.text}>Conduza, facture e ajude a movimentar a cidade!</Text>
             </TouchableOpacity>
 
             <View style={styles.footer}>
