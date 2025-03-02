@@ -5,7 +5,7 @@ import { styles } from './passenger.style.js'
 import { useState, useEffect } from "react";
 import icons from '../../constants/icons.js'
 import { getCurrentPositionAsync, requestForegroundPermissionsAsync, reverseGeocodeAsync } from "expo-location";
-
+import { api, HandleError } from "../../constants/api.js";
 
 
 function Passenger(props) {
@@ -22,37 +22,25 @@ function Passenger(props) {
 
     async function RequestRideFromUser() {
         //Aceder aos dados do utilizador na API
-        //const response = {};
-        /* const response = {
-            ride_id: 2,
-            passenger_user_id: 3,
-            passenger_name: "Hayati Monjane",
-            passenger_phone: "(+258) 850741012",
-            pickup_address: "UEM-Campos, 123 - Julius Nyerere",
-            pickup_date: "2025-02-26",
-            pickup_latitude: -25.980467,
-            pickup_longitude: 32.591942,
-            dropoff_address: "Shoprite Da Matola",
-            status: "P",
-            driver_user_id: 4,
-            driver_name: null,
-        }*/
-       const response ={
-       ride_id: 1,
-       passenger_user_id: 3,
-       passenger_name: "Hayati Monjane",
-       passenger_phone: "(+258) 850741012",
-       pickup_address: "UEM-Campos, 123 - Julius Nyerere",
-       pickup_date: "2025-02-26",
-       pickup_latitude: -25.980467,
-       pickup_longitude: 32.591942,
-       dropoff_address: "Shoprite Da Matola",
-       status: "A",
-       driver_user_id: 4,
-       driver_name: "Lourenço Monajane",
-       driver_phone: "(+258) 850741012",
-   }
-        return response;
+        try {
+            const response = await api.get("/rides", {
+                params: {
+                    passenger_user_id: userId,
+                    pickup_date: new Date().toISOString("pt-MZ", {
+                        timeZone: "Africa/Maputo"
+                    }).substring(0, 10),
+                    status_not: "F"
+                }
+            });
+            if (response.data[0])
+                return response.data[0];
+            else
+                return {};
+
+        } catch (error) {
+            HandleError(error);
+            props.navigation.goBack();
+        }
     }
     //Funcao para obter a localização do utilizador
     async function RequestPermissionAndGetLocation() {
@@ -80,8 +68,8 @@ function Passenger(props) {
         //buscar dados de alguma corrida aberta na API para o utilizador...
         const response = await RequestRideFromUser();
         if (!response.ride_id) {
-            const location = { latitude: -25.971289,longitude:  32.566223 };
-           // const location = await RequestPermissionAndGetLocation();
+            const location = { latitude: -25.971289, longitude: 32.566223 };
+            // const location = await RequestPermissionAndGetLocation();
             if (location.latitude) {
                 setTitle("Solicitar uma corrida...");
                 setMyLocation(location);
@@ -90,7 +78,7 @@ function Passenger(props) {
                 Alert.alert("Não foi possível obter a tua localização");
             }
         } else {
-            setTitle(response.status =="P" ? "Aguardando pela corrida..." : "A tua corrida está a caminho...");
+            setTitle(response.status == "P" ? "Esperar pelo motorista!" : "O teu motorista está a caminho!");
             setMyLocation({ latitude: response.pickup_latitude, longitude: response.pickup_longitude });
             setPickupAddress(response.pickup_address);
             setDropoffAddress(response.dropoff_address);
@@ -125,7 +113,7 @@ function Passenger(props) {
 
         props.navigation.goBack(); //Voltar para a tela anterior
     }
-  //Função para finalizar uma corrida
+    //Função para finalizar uma corrida
     async function FinishRide() {
         const json = {
             passenger_user_id: userId,
@@ -151,14 +139,14 @@ function Passenger(props) {
                 <MapView style={styles.map}
                     provider={PROVIDER_DEFAULT}
                     initialRegion={{
-                        latitude: myLocation.latitude,
-                        longitude: myLocation.longitude,
+                        latitude: Number(myLocation.latitude),
+                        longitude: Number(myLocation.longitude),
                         latitudeDelta: 0.04,
                         longitudeDelta: 0.04
                     }}>
                     <Marker coordinate={{
-                        latitude: myLocation.latitude,
-                        longitude: myLocation.longitude,
+                        latitude: Number(myLocation.latitude),
+                        longitude: Number(myLocation.longitude),
                     }}
                         title="Hayati Monjane"
                         description="FPLM, 4001"
@@ -174,41 +162,32 @@ function Passenger(props) {
 
                     <View style={styles.footerFields}>
                         <Text>Origem</Text>
-                        <TextInput style={styles.input} value={pickupAddress} 
-                        onChangeText={(text) => setPickupAddress(text)} 
-                        editable={status == "" ? true : false} />
+                        <TextInput style={styles.input} value={pickupAddress}
+                            onChangeText={(text) => setPickupAddress(text)}
+                            editable={status == "" ? true : false} />
                     </View>
 
                     <View style={styles.footerFields}>
                         <Text >Destino</Text>
                         <TextInput style={styles.input} value={dropoffAddress}
-                        onChangeText={(text) => setDropoffAddress(text)}
-                        editable={status == "" ? true : false} />
+                            onChangeText={(text) => setDropoffAddress(text)}
+                            editable={status == "" ? true : false} />
                     </View>
 
                     {
-                        status == "A" &&  <View style={styles.footerFields}>
-                        <Text >Motorista</Text>
-                        <TextInput style={styles.input} value={driverName}
-                        editable={false} />
-                    </View>
+                        status == "A" && <View style={styles.footerFields}>
+                            <Text >Motorista</Text>
+                            <TextInput style={styles.input} value={driverName}
+                                editable={false} />
+                        </View>
                     }
 
-                   
+
                 </View>
-                {
-                    status == "" &&   <MyButton text="CONFIRMAR" theme="default"
-                    onClick={AskForRide} />
-                }
-                 {
-                    status == "P" &&   <MyButton text="CANCELAR" theme="red"
-                    onClick={CancelRide} />
-                }
-                 {
-                    status == "A" &&   <MyButton text="FINALIZAR CORRIDA" theme="red"
-                    onClick={FinishRide} />
-                }
-              
+                {status === "" && <MyButton text="CONFIRMAR" theme="default" onClick={AskForRide} />}
+                {status === "P" && <MyButton text="CANCELAR" theme="red" onClick={CancelRide} />}
+                {status === "A" && <MyButton text="FINALIZAR CORRIDA" theme="red" onClick={FinishRide} />}
+
             </>
                 :
                 <View style={styles.loading}>
