@@ -63,12 +63,11 @@ function RideDetails(props) {
         }
     }
 
-    useFocusEffect(
-        useCallback(() => {
-            RequestRideDetails(); 
-        }, [])
-    );
-
+  useFocusEffect(
+    useCallback(() => {
+        RequestRideDetails();
+    }, [])
+);
 
 
     return (
