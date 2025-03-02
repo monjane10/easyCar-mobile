@@ -33,21 +33,33 @@ function RideDetails(props) {
     async function AcceptRide() {
         //Aceder a dados da viagem na API
         const json = {
-            driver_user_id: userId,
-            ride_id: rideId,
+            driver_user_id: userId
         }
-        console.log("Aceitar Corrida:", json);
-        props.navigation.goBack();
+        try {
+            const response = await api.put("/rides/" + rideId + "/accept", json);
+            if (response.data){
+                props.navigation.goBack();
+            }   
+        } catch (error) {
+            HandleError(error);
+            props.navigation.goBack();
+        }
     }
 
     async function CancelRide() {
         //Aceder a dados da viagem na API
         const json = {
-            driver_user_id: userId,
-            ride_id: rideId,
+            driver_user_id: userId
         }
-        console.log("Cancelar Corrida:", json);
-        props.navigation.goBack();
+        try {
+            const response = await api.put("/rides/" + rideId + "/cancel", json);
+            if (response.data){
+                props.navigation.goBack();
+            }   
+        } catch (error) {
+            HandleError(error);
+            props.navigation.goBack();
+        }
     }
 
     useEffect(() => {
