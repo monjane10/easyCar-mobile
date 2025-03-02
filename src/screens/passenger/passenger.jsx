@@ -90,18 +90,22 @@ function Passenger(props) {
 
     //Função para solicitar uma corrida
     async function AskForRide() {
-        const json = {
-            passenger_id: userId,
-            pickup_address: pickupAddress,
-            dropoff_address: dropoffAddress,
-            pickup_latitude: myLocation.latitude,
-            pickup_longitude: myLocation.longitude,
+        try {
+            const json = {
+                passenger_user_id: userId,
+                pickup_address: pickupAddress,
+                dropoff_address: dropoffAddress,
+                pickup_latitude: myLocation.latitude,
+                pickup_longitude: myLocation.longitude,
+            }
+            const response = await api.post("/rides", json);
+            if (response.data)
+                props.navigation.goBack();
+        } catch (error) {
+            HandleError(error);
         }
-
-        console.log("Dados a serem enviados para a API: ", json);
-
-        props.navigation.goBack(); //Voltar para a tela anterior
     }
+
     //Função para cancelar uma corrida
     async function CancelRide() {
         const json = {
