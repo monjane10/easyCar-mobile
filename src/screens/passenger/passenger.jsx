@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import icons from '../../constants/icons.js'
 import { getCurrentPositionAsync, requestForegroundPermissionsAsync, reverseGeocodeAsync } from "expo-location";
 import { api, HandleError } from "../../constants/api.js";
+import Toast from "react-native-toast-message";
 
 
 function Passenger(props) {
@@ -124,6 +125,14 @@ function Passenger(props) {
         try {
             const response = await api.put("/rides/" + rideId + "/finish", json);
             if (response.data)
+                Toast.show({
+                    type: "success",
+                    text1: "Corrida finalizada!",
+                    text2: "Obrigado por viajar conosco. 🚗💨",
+                    position: "top",
+                    visibilityTime: 4000, // Tempo que o toast fica visível (ms)
+                    autoHide: true
+                });
                 props.navigation.goBack();
         } catch (error) {
             HandleError(error);
