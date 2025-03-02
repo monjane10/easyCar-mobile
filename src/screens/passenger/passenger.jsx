@@ -108,25 +108,26 @@ function Passenger(props) {
 
     //Função para cancelar uma corrida
     async function CancelRide() {
-        const json = {
-            passenger_user_id: userId,
-            ride_id: rideId,
+         try {
+            const response = await api.delete("/rides/" + rideId);
+            if (response.data)
+                props.navigation.goBack();
+        } catch (error) {
+            HandleError(error);
         }
-
-        console.log("Dados a serem enviados para a API: ", json);
-
-        props.navigation.goBack(); //Voltar para a tela anterior
     }
     //Função para finalizar uma corrida
     async function FinishRide() {
         const json = {
-            passenger_user_id: userId,
-            ride_id: rideId,
+            passenger_user_id: userId
         }
-
-        console.log("Dados a serem enviados para a API: ", json);
-
-        props.navigation.goBack(); //Voltar para a tela anterior
+        try {
+            const response = await api.put("/rides/" + rideId + "/finish", json);
+            if (response.data)
+                props.navigation.goBack();
+        } catch (error) {
+            HandleError(error);
+        }
     }
 
 
