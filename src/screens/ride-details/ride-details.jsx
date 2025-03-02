@@ -2,9 +2,10 @@ import { Text, TextInput, View } from "react-native";
 import MyButton from "../../components/mybutton/mybutton.jsx";
 import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
 import { styles } from './ride-details.style.js';
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import icons from '../../constants/icons.js';
 import { api, HandleError } from "../../constants/api.js";
+import { useFocusEffect } from "@react-navigation/native";
 
 
 
@@ -62,9 +63,11 @@ function RideDetails(props) {
         }
     }
 
-    useEffect(() => {
-        RequestRideDetails();
-    }, [])
+    useFocusEffect(
+        useCallback(() => {
+            RequestRideDetails(); 
+        }, [])
+    );
 
 
 
